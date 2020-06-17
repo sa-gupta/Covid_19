@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+//import 'package:covid_19/cases.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -13,15 +14,16 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
- int newConCase;
- int totDeathCase;
- int totRecoveredCase;
- int totConfirmedCase;
+
 class _HomeScreenState extends State<HomeScreen> {
 
   Map data;
   var userData ;
  
+ int newConCase;
+ int totDeathCase;
+ int totRecoveredCase;
+ int totConfirmedCase;
 
 
   Future getData() async{
@@ -44,13 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getData();
   }
-  
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
   
   @override
   Widget build(BuildContext context) {
     
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
+      drawer: buildDrawer(context),
       appBar: buildAppBar(),
       body: SingleChildScrollView(
               child: Column(
@@ -217,7 +221,9 @@ class _HomeScreenState extends State<HomeScreen> {
       elevation: 0,
       leading: IconButton(
         icon: SvgPicture.asset("assets/icons/menu.svg"),
-        onPressed: () {},
+        onPressed: () {
+          _scaffoldKey.currentState.openDrawer();
+        },
       ),
       actions: <Widget>[
         IconButton(
@@ -228,6 +234,30 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+  Drawer buildDrawer(BuildContext context){
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: cPrimaryColor.withOpacity(0.05),
+            ),
+            child: Text(
+              "Header"
+              ),
+            ),
+            ListTile(
+              title: Text("Home"),
+              onTap: (){
+                Navigator.of(context).pop();
+              },
+            ),
+        ],
+      ),
+    );
+  }
 
 class PreventionCard extends StatelessWidget {
   final String svgSrc;
@@ -261,6 +291,11 @@ class PreventionCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
 
 
 
